@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+    <script>
+        const params = new URL(window.location.href).searchParams;
+        const pb = params.get("pb");
+        const lng = pb.split("d").pop();
+        const url = "https://www.google.com/maps/embed?pb=" + pb;
+        const game_type = Number(params.get("game_type"));
+
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.text();
+            })
+            .then(htmlContent => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(htmlContent, "text/html");
+
+                let addUrl = "";
+                let addScript = "";
+                let allow_keys = ['z', 'r', 'c', 'Z', 'R', 'C', ' '];
+
+                //移動なし
+                if (game_type % 10 == 1) {
+                    addUrl += "&variables=linksControl&variables=clickToGo";
+                } else allow_keys = allow_keys.concat(["ArrowUp","ArrowDown","W","S","w","s"]);
+
+                //パンなし
+                if (Math.floor(game_type / 10) % 10 == 1) {
+                } else allow_keys = allow_keys.concat(["ArrowLeft","ArrowRight","A","D","a","d"]);
+
+                //ズームなし
+                if (Math.floor(game_type / 100) % 10 == 1) {
+                    addUrl += "&variables=scrollwheel";
+                } else allow_keys = allow_keys.concat(["+","-","="]);
+
+                const link = doc.querySelectorAll("link")[0];
+                const link2 = `https://abshrimp.cloudfree.jp/geo/init_js.cgi?url=${link.href}&variables=addressControl&variables=fullscreenControl&variables=showRoadLabels&variables=motionTrackingControl&variables=zoomControl&variables=panControl${addUrl}`;
+
+                addScript += `
+                    document.head.appendChild2 = document.head.appendChild;
+                    document.head.appendChild = (e) => {
+                        if (String(e.src).includes("AuthenticationService")) {
+                            const callback = new URL(e.src).searchParams.get("callback");
+                            e.src = "";
+                            e.textContent = "/**/" + callback + " && " + callback + "([1,null,0,null,null,[1]])";
+                        }
+                        document.head.appendChild2(e);
+                    };
+
+                    window.addEventListener("keydown", (e) => {
+                            const keysToEnable = ${JSON.stringify(allow_keys)};
+                            if (!keysToEnable.includes(e.key)) e.stopImmediatePropagation();
+                        },
+                        true
+                    );
+                `;
+                
+                const scripts = doc.querySelectorAll("script");
+                for (let script of scripts) {
+                    if (script.textContent != "") {
+                        script.textContent = script.textContent.replace(`${lng}]`, `${lng}],null,null,null,100,1`)
+                        script.textContent = addScript + script.textContent;
+                        script.textContent = script.textContent.replace(link.href, link2);
+                        break;
+                    }
+                }
+                link.href = link2;
+
+                const addStyle = `
+                    .gm-iv-address,
+                    .gm-fullscreen-control,
+                    div:not(.gmnoprint) > .gm-style-cc:not(.gmnoprint) {
+                        display: none !important;
+                    }
+                `;
+                doc.querySelectorAll("style")[0].textContent += addStyle;
+
+                document.open();
+                document.write(doc.documentElement.outerHTML);
+                document.close();
+            })
+            .catch(error => {
+                console.error("Error fetching and replacing HTML:", error);
+            });
+
+    </script>
+</body>
+
+</html>

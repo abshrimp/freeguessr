@@ -1,0 +1,14 @@
+{
+    "theme_color": "#f2ede2",
+    "background_color": "#f2ede2",
+    "display": "standalone",
+    "scope": "/freeguessr/",
+    "start_url": "/freeguessr/",
+    "name": "Freeguessr",
+    "short_name": "Freeguessr",
+    "description": "Explore the world freely and for free",
+    "icons": [
+      { "src": "/freeguessr/icon-192x192.png", "type": "image/png", "sizes": "192x192" },
+      { "src": "/freeguessr/icon-512x512.png", "type": "image/png", "sizes": "512x512" }
+    ]
+  }

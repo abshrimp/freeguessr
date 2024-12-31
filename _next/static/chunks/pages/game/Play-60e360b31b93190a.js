@@ -1,0 +1,1 @@
+(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[647],{4956:(_,n,e)=>{(window.__NEXT_P=window.__NEXT_P||[]).push(["/game/Play",function(){return e(6791)}])}},_=>{var n=n=>_(_.s=n);_.O(0,[965,791,636,593,792],()=>n(4956)),_N_E=_.O()}]);
