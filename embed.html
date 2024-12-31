@@ -36,7 +36,7 @@
                 } else allow_keys = allow_keys.concat(["+","-","="]);
 
                 const link = doc.querySelectorAll("link")[0];
-                const link2 = `https://abshrimp.cloudfree.jp/geo/init_js.cgi?url=${link.href}&variables=addressControl&variables=fullscreenControl&variables=showRoadLabels&variables=motionTrackingControl&variables=zoomControl&variables=panControl${addUrl}`;
+                const link2 = `https://abshrimp.cloudfree.jp/geo/init_js.cgi?url=${link.href}&variables=addressControl&variables=fullscreenControl&variables=showRoadLabels&variables=motionTracking&variables=motionTrackingControl&variables=zoomControl&variables=panControl${addUrl}`;
 
                 addScript += `
                     document.head.appendChild2 = document.head.appendChild;
