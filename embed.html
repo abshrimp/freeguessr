@@ -24,16 +24,13 @@
                 let addScript = "";
                 let allow_keys = ['z', 'r', 'c', 'Z', 'R', 'C', ' '];
 
-                //移動なし
                 if (game_type % 10 == 1) {
                     addUrl += "&variables=linksControl&variables=clickToGo";
                 } else allow_keys = allow_keys.concat(["ArrowUp","ArrowDown","W","S","w","s"]);
 
-                //パンなし
                 if (Math.floor(game_type / 10) % 10 == 1) {
                 } else allow_keys = allow_keys.concat(["ArrowLeft","ArrowRight","A","D","a","d"]);
 
-                //ズームなし
                 if (Math.floor(game_type / 100) % 10 == 1) {
                     addUrl += "&variables=scrollwheel";
                 } else allow_keys = allow_keys.concat(["+","-","="]);
